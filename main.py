@@ -10,8 +10,9 @@ class Tank:
         self.height = height
         self.color = color
         self.angle = 0
-        self.draw_line = True   
+        self.isAmmoReady = False   
         self.line = None
+        self.rect = None
 
     def fight(self):
         self.rotate(-7)
@@ -36,8 +37,8 @@ class Tank:
         return 0 <= new_x - self.width / 2 <= window_width and 0 <= new_y - self.height / 2 <= window_height
 
     
-    def toggle_draw_line(self):
-        self.draw_line = not self.draw_line
+    def toggleAmmoReady(self):
+        self.isAmmoReady = not self.isAmmoReady
 
 
     def get_front_center(self):
@@ -54,12 +55,15 @@ class Tank:
         self.drawTank(rect_surface)
         rotated_surface = pygame.transform.rotate(rect_surface, self.angle)
         rect_rect = rotated_surface.get_rect()
+
+        self.rect = rect_rect
+        
         rect_rect.center = (self.x, self.y)
         surface.blit(rotated_surface, rect_rect)
         self.drawShoot(surface)
 
     def drawShoot(self, surface):
-        if self.draw_line:
+        if self.isAmmoReady:
             front_center = self.get_front_center()
 
             # Obliczenie wektora kierunkowego 
@@ -69,8 +73,13 @@ class Tank:
             end_point = (front_center[0] + 800 * direction[0], front_center[1] + 800 * direction[1])
             self.line = pygame.draw.line(surface, self.color, front_center, end_point, 1)
 
-
-    
+    @staticmethod
+    def detectCollision(one_rectangle, other_rectangle):   
+        if one_rectangle is not None:
+            return one_rectangle.colliderect(other_rectangle)
+        else: return None
+            
+        
         
         
 window_width = 500
@@ -83,26 +92,24 @@ white = (255, 255, 255)
 red = (255, 0, 0)
 black = (0, 0, 0)
 
-tank = Tank(window_width/2, window_height/2, 20, 10, white)
-rectangle1 = Tank(window_width/2, window_height/2, 20, 10, red)
+redTank = Tank(window_width/2, window_height/2, 20, 10, white)
+whiteTank = Tank(window_width/2, window_height/2, 20, 10, red)
 
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit
 
-    tank.rotate(5)
-    tank.move_forward(10)
-    tank.draw_line = not tank.draw_line
-    
+    redTank.rotate(5)
+    redTank.move_forward(10)
+    redTank.isAmmoReady = not redTank.isAmmoReady    
 
-    rectangle1.fight()
-    if rectangle1.line is not None:
-        print(rectangle1.line)
-   
+    whiteTank.fight()
+    print(f"{whiteTank.line=}", f"{whiteTank.rect=}")   
+    print(Tank.detectCollision(redTank.line, whiteTank.rect))
             
     window.fill(black)
-    tank.draw(window)
-    sleep(0.5)
-    rectangle1.draw(window)
+    redTank.draw(window)
+    sleep(2)
+    whiteTank.draw(window)
     pygame.display.update()
