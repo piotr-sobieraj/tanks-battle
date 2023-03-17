@@ -22,8 +22,7 @@ class Tank:
     def move_forward(self, distance):
         dx = distance * math.cos(math.radians(self.angle))
         dy = -distance * math.sin(math.radians(self.angle))
-        self.move(dx, dy)
-        
+        self.move(dx, dy)        
     
     def move(self, x, y):
         new_x = self.x + x
@@ -34,7 +33,12 @@ class Tank:
         
     def toggle_draw_line(self):
         self.draw_line = not self.draw_line
-    
+
+
+    def get_front_center(self):
+        cx = self.x + (self.width / 2) * math.cos(math.radians(self.angle))
+        cy = self.y - (self.width / 2) * math.sin(math.radians(self.angle))
+        return cx, cy
     
     def draw(self, surface):
         rect_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
@@ -44,11 +48,23 @@ class Tank:
         rect_rect = rotated_surface.get_rect()
         rect_rect.center = (self.x, self.y)
         surface.blit(rotated_surface, rect_rect)
+        if self.draw_line:
+            front_center = self.get_front_center()
 
+            # Obliczenie wektora kierunkowego w zależności od dłuższego boku prostokąta
+            if self.width >= self.height:
+                direction = (math.cos(math.radians(self.angle)), -math.sin(math.radians(self.angle)))
+            else:
+                direction = (math.sin(math.radians(self.angle)), math.cos(math.radians(self.angle)))
+
+            # Obliczenie punktu końcowego linii
+            end_point = (front_center[0] + 800 * direction[0], front_center[1] + 800 * direction[1])
+            pygame.draw.line(surface, self.color, front_center, end_point, 1)
+
+
+    
         
         
-import pygame
-
 window_width = 500
 window_height = 500
 pygame.init()
@@ -67,23 +83,16 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit
 
-    # keys = pygame.key.get_pressed()
-    # if keys[pygame.K_LEFT]:
-    #     rectangle.rotate(-1)
-    # if keys[pygame.K_RIGHT]:
-    #     rectangle.rotate(1)
-    # if keys[pygame.K_UP]:
-    #     rectangle.move_forward(5)
-    # if keys[pygame.K_DOWN]:
-    #     rectangle.move_forward(-5)
-
     tank.rotate(5)
     tank.move_forward(10)
+    tank.draw_line = not tank.draw_line
+    
 
     rectangle1.fight()
+    rectangle1.draw_line = not rectangle1.draw_line
     
             
-    sleep(0.5)
+    sleep(5)
     window.fill(black)
     tank.draw(window)
     rectangle1.draw(window)
