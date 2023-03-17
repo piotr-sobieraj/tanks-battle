@@ -1,5 +1,6 @@
-import pygame, math
+import pygame
 from time import sleep
+from math import cos, sin, radians
 
 class Tank:
     def __init__(self, x, y, width, height, color):
@@ -9,8 +10,8 @@ class Tank:
         self.height = height
         self.color = color
         self.angle = 0
-        self.draw_line = False
-
+        self.draw_line = True   
+        self.line = None
 
     def fight(self):
         self.rotate(-7)
@@ -20,46 +21,53 @@ class Tank:
         self.angle += angle_step
 
     def move_forward(self, distance):
-        dx = distance * math.cos(math.radians(self.angle))
-        dy = -distance * math.sin(math.radians(self.angle))
+        dx = distance * cos(radians(self.angle))
+        dy = -distance * sin(radians(self.angle))
         self.move(dx, dy)        
     
     def move(self, x, y):
         new_x = self.x + x
         new_y = self.y + y
-        if 0 <= new_x - self.width / 2 <= window_width and 0 <= new_y - self.height / 2 <= window_height:
+        if self.isPointWithinBoard(new_x, new_y):
             self.x = new_x
             self.y = new_y
-        
+
+    def isPointWithinBoard(self, new_x, new_y):
+        return 0 <= new_x - self.width / 2 <= window_width and 0 <= new_y - self.height / 2 <= window_height
+
+    
     def toggle_draw_line(self):
         self.draw_line = not self.draw_line
 
 
     def get_front_center(self):
-        cx = self.x + (self.width / 2) * math.cos(math.radians(self.angle))
-        cy = self.y - (self.width / 2) * math.sin(math.radians(self.angle))
+        cx = self.x + (self.width / 2) * cos(radians(self.angle))
+        cy = self.y - (self.width / 2) * sin(radians(self.angle))
         return cx, cy
+
+    def drawTank(self, rect_surface):
+        pygame.draw.rect(rect_surface, self.color, (0, 0, self.width, self.height))
     
     def draw(self, surface):
         rect_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
         rect_surface.fill((0, 0, 0, 0))
-        pygame.draw.rect(rect_surface, self.color, (0, 0, self.width, self.height))
+        self.drawTank(rect_surface)
         rotated_surface = pygame.transform.rotate(rect_surface, self.angle)
         rect_rect = rotated_surface.get_rect()
         rect_rect.center = (self.x, self.y)
         surface.blit(rotated_surface, rect_rect)
+        self.drawShoot(surface)
+
+    def drawShoot(self, surface):
         if self.draw_line:
             front_center = self.get_front_center()
 
-            # Obliczenie wektora kierunkowego w zależności od dłuższego boku prostokąta
-            if self.width >= self.height:
-                direction = (math.cos(math.radians(self.angle)), -math.sin(math.radians(self.angle)))
-            else:
-                direction = (math.sin(math.radians(self.angle)), math.cos(math.radians(self.angle)))
-
+            # Obliczenie wektora kierunkowego 
+            direction = (cos(radians(self.angle)), -sin(radians(self.angle)))
+            
             # Obliczenie punktu końcowego linii
             end_point = (front_center[0] + 800 * direction[0], front_center[1] + 800 * direction[1])
-            pygame.draw.line(surface, self.color, front_center, end_point, 1)
+            self.line = pygame.draw.line(surface, self.color, front_center, end_point, 1)
 
 
     
@@ -69,7 +77,7 @@ window_width = 500
 window_height = 500
 pygame.init()
 window = pygame.display.set_mode((window_width, window_height))
-pygame.display.set_caption("Obracający się prostokąt")
+pygame.display.set_caption("Tanks battle")
 
 white = (255, 255, 255)
 red = (255, 0, 0)
@@ -89,11 +97,12 @@ while True:
     
 
     rectangle1.fight()
-    rectangle1.draw_line = not rectangle1.draw_line
-    
+    if rectangle1.line is not None:
+        print(rectangle1.line)
+   
             
-    sleep(5)
     window.fill(black)
     tank.draw(window)
+    sleep(0.5)
     rectangle1.draw(window)
     pygame.display.update()
