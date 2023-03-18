@@ -76,9 +76,9 @@ class Tank:
             self.line = (front_center, end_point)
 
     @staticmethod
-    def detectHit(tank1, tank2):
-        if tank1.rect is not None and tank2.line is not None:
-            return tank1.rect.clipline(tank2.line)
+    def detectHit(hit, shooting):
+        if hit.rect is not None and shooting.line is not None:
+            return hit.rect.clipline(shooting.line)
 
     
             
