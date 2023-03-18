@@ -10,8 +10,8 @@ class Tank:
         self.height = height
         self.color = color
         self.angle = 0
-        self.isAmmoReady = False   
-        self.line = None
+        self.isAmmoReady = True   
+        self.line = tuple()
         self.rect = None
 
     def fight(self):
@@ -32,6 +32,7 @@ class Tank:
         if self.isPointWithinBoard(new_x, new_y):
             self.x = new_x
             self.y = new_y
+        else: pass
 
     def isPointWithinBoard(self, new_x, new_y):
         return 0 <= new_x - self.width / 2 <= window_width and 0 <= new_y - self.height / 2 <= window_height
@@ -71,13 +72,15 @@ class Tank:
             
             # Obliczenie punktu końcowego linii
             end_point = (front_center[0] + 800 * direction[0], front_center[1] + 800 * direction[1])
-            self.line = pygame.draw.line(surface, self.color, front_center, end_point, 1)
+            pygame.draw.line(surface, self.color, front_center, end_point, 1)
+            self.line = (front_center, end_point)
 
     @staticmethod
-    def detectCollision(one_rectangle, other_rectangle):   
-        if one_rectangle is not None:
-            return one_rectangle.colliderect(other_rectangle)
-        else: return None
+    def detectHit(tank1, tank2):
+        if tank1.rect is not None and tank2.line is not None:
+            return tank1.rect.clipline(tank2.line)
+
+    
             
         
         
@@ -92,8 +95,18 @@ white = (255, 255, 255)
 red = (255, 0, 0)
 black = (0, 0, 0)
 
-redTank = Tank(window_width/2, window_height/2, 20, 10, white)
-whiteTank = Tank(window_width/2, window_height/2, 20, 10, red)
+redTank = Tank(window_width/2, window_height/2, 20, 10, red)
+whiteTank = Tank(window_width/2, window_height/2, 20, 10, white)
+
+# whiteTank.rotate(90)
+# whiteTank.move_forward(100)
+# whiteTank.rotate(-90)
+# whiteTank.move_forward(100)
+# whiteTank.rotate(-90)
+
+
+
+licznik = 0
 
 while True:
     for event in pygame.event.get():
@@ -102,14 +115,23 @@ while True:
 
     redTank.rotate(5)
     redTank.move_forward(10)
-    redTank.isAmmoReady = not redTank.isAmmoReady    
-
+    
     whiteTank.fight()
-    print(f"{whiteTank.line=}", f"{whiteTank.rect=}")   
-    print(Tank.detectCollision(redTank.line, whiteTank.rect))
+
+    # print(whiteTank.rect)
+    print(Tank.detectHit(redTank, whiteTank)) #strzal białego
+    print(Tank.detectHit(whiteTank, redTank)) #strzal czerwonego
+    
+    # print(f"{redTank.rect=}", 
+    #       f"{whiteTank.line=}", 
+    #       sep="\t")
             
     window.fill(black)
     redTank.draw(window)
-    sleep(2)
+
+    sleep(0.21)
+        
     whiteTank.draw(window)
+    licznik += 1
     pygame.display.update()
+    
