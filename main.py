@@ -15,18 +15,18 @@ class Tank:
         self.rect = None
 
     def fight(self):
-        self.rotate(-7)
-        self.move_forward(20)
+        self.rotate(45)
+        self.move(20)
     
     def rotate(self, angle_step):
         self.angle += angle_step
 
-    def move_forward(self, distance):
+    def move(self, distance):
         dx = distance * cos(radians(self.angle))
         dy = -distance * sin(radians(self.angle))
-        self.move(dx, dy)        
+        self.moveTank(dx, dy)        
     
-    def move(self, x, y):
+    def moveTank(self, x, y):
         new_x = self.x + x
         new_y = self.y + y
         if self.isPointWithinBoard(new_x, new_y):
@@ -102,14 +102,13 @@ while True:
             pygame.quit
 
     redTank.rotate(5)
-    redTank.move_forward(10)
+    redTank.move(10)
     
     whiteTank.fight()
 
     print(Tank.detectHit(redTank, whiteTank)) #strzal białego
     print(Tank.detectHit(whiteTank, redTank)) #strzal czerwonego
-    
-                
+                    
     window.fill(green)
     redTank.draw(window)
 
