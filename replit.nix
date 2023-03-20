@@ -1,8 +1,6 @@
 { pkgs }: {
 	deps = [
-    pkgs.nano
-    pkgs.vim
-    pkgs.mc
+    pkgs.iproute2
     pkgs.python310Full
     pkgs.replitPackages.prybar-python310
     pkgs.replitPackages.stderred
