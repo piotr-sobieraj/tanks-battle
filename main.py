@@ -16,7 +16,7 @@ class Tank:
 
     def fight(self):
         self.rotate(-7)
-        self.move_forward(-20)
+        self.move_forward(20)
     
     def rotate(self, angle_step):
         self.angle += angle_step
@@ -80,33 +80,21 @@ class Tank:
         if hit.rect is not None and shooting.line is not None:
             return hit.rect.clipline(shooting.line)
 
-    
-            
         
-        
-        
-window_width = 500
-window_height = 500
+white = (255, 255, 255)
+red = (255, 0, 0)
+green = (0, 255, 0)
+black = (0, 0, 0)
+
+
+window_width = 400
+window_height = 400
 pygame.init()
 window = pygame.display.set_mode((window_width, window_height))
 pygame.display.set_caption("Tanks battle")
 
-white = (255, 255, 255)
-red = (255, 0, 0)
-black = (0, 0, 0)
-
 redTank = Tank(window_width/2, window_height/2, 20, 10, red)
 whiteTank = Tank(window_width/2, window_height/2, 20, 10, white)
-
-# whiteTank.rotate(90)
-# whiteTank.move_forward(100)
-# whiteTank.rotate(-90)
-# whiteTank.move_forward(100)
-# whiteTank.rotate(-90)
-
-
-
-licznik = 0
 
 while True:
     for event in pygame.event.get():
@@ -118,20 +106,14 @@ while True:
     
     whiteTank.fight()
 
-    # print(whiteTank.rect)
     print(Tank.detectHit(redTank, whiteTank)) #strzal białego
     print(Tank.detectHit(whiteTank, redTank)) #strzal czerwonego
     
-    # print(f"{redTank.rect=}", 
-    #       f"{whiteTank.line=}", 
-    #       sep="\t")
-            
-    window.fill(black)
+                
+    window.fill(green)
     redTank.draw(window)
 
-    sleep(0.21)
+    sleep(0.5)
         
     whiteTank.draw(window)
-    licznik += 1
-    pygame.display.update()
-    
+    pygame.display.update()    
