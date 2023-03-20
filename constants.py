@@ -4,8 +4,8 @@ red = (255, 0, 0)
 green = (0, 255, 0)
 
 # Window size
-windowWidth = 400
-windowHeight = 400 
+windowWidth = 450
+windowHeight = 450 
 
 #Tank size
 tankWidth = 20 
