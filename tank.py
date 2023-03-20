@@ -1,4 +1,5 @@
-from math import cos, sin, radians
+from math import cos, sin, radians, sqrt
+from numpy import sign
 import constants as const
 import pygame
 
@@ -13,25 +14,32 @@ class Tank:
         self.angle = 0 
         self.isAmmoReady = True # not implemented yet
         self.shotLine = tuple() # line that represents trajectory of the projectile
-        self.rect = None # Rectangle that represents the tank
-
-    def fight(self):
-        """Nethod in which the gamer puts their tactics. Here can only be used: rotate and move. In future also: fire."""
-        self.rotate(45)
-        self.move(20)
-    
-    def rotate(self, angle):
-        """Rotates the tank by angle degrees counterclockwise. Use negative number to rotate. """
-        self.angle += angle
+        self.rect = None # Rectangle that repr1.51.5esents the tank
 
     def move(self, distance):
-        """Moves the tank by distance pixels forward. Use negative number to move backward."""
+        """Moves the tank by distance pixels forward. 
+        Distance is cut down to lengt of the tank.
+        Use negative number to move backward."""
+        distance = max(distance, const.tankHeight)
         dx = distance * cos(radians(self.angle))
         dy = -distance * sin(radians(self.angle))
-        self.moveTank(dx, dy)        
+        self.moveTo(dx, dy)    
+
+    def rotate(self, angle):
+        """Rotates the tank by angle degrees counterclockwise. 
+        Returns modulo 30.
+        Use negative number to rotate. """
+        self.angle += sign(angle) * (angle % 31)
     
-    def moveTank(self, x, y):
-        """Calculates new coordinates of the tank and sets the new coords, if they fit within the board."""
+    def fight(self):
+        """Nethod in which the gamer puts their tactics. 
+        Here can only be used: rotate and move. In future also: fire."""
+        self.rotate(45)
+        self.move(20)          
+    
+    def moveTo(self, x, y):
+        """Calculates new coordinates of the tank and sets the new coords, 
+        if they fit within the board."""
         new_x = self.x + x
         new_y = self.y + y
         if self.isPointWithinBoard(new_x, new_y):
@@ -44,7 +52,9 @@ class Tank:
         return 0 <= new_x - self.width / 2 <= const.windowWidth and 0 <= new_y - self.height / 2 <= const.windowHeight
     
     def getFrontCenter(self):
-        """Calculates coordinates of the point lying on the front center of the tank - used to calculate trajectory of a projectile."""
+        """Calculates coordinates of the point lying 
+        on the front center of the tank - used to calculate 
+        trajectory of a projectile."""
         cx = self.x + (self.width / 2) * cos(radians(self.angle))
         cy = self.y - (self.width / 2) * sin(radians(self.angle))
         return cx, cy
@@ -66,6 +76,9 @@ class Tank:
 
     def drawShoot(self, surface):
         """Draws a trajectowy of a projectile."""
+        def diagonal(a, b):
+            return sqrt(a**2 + b**2)
+            
         if self.isAmmoReady:
             front_center = self.getFrontCenter()
 
@@ -73,7 +86,9 @@ class Tank:
             direction = (cos(radians(self.angle)), -sin(radians(self.angle)))
             
             # Obliczenie punktu końcowego linii
-            end_point = (front_center[0] + 800 * direction[0], front_center[1] + 800 * direction[1])
+            # Najdłuższa linia może być przekątną wymiarów boarda
+            diag = diagonal(const.windowWidth, const.windowHeight)
+            end_point = (front_center[0] + diag * direction[0], front_center[1] + diag * direction[1])
             pygame.draw.line(surface, self.color, front_center, end_point, 1)
             self.shotLine = (front_center, end_point)
 
