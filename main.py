@@ -17,21 +17,24 @@ if __name__ == "__main__":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit
-        
+
+        board.updateDistanceInfo()
         # Tactics of the red tank - should be put in the fight method.
-        redTank.rotate(-15)
-        redTank.move(10)
+        redTank.rotate(45)
+        redTank.move(20)
         
+        # board.distanceBetweenTanks()
         # Tactics of the white tank 
         whiteTank.fight()
+        # board.distanceBetweenTanks()
     
         # Detection of a hit.
         if (Tank.detectHit(redTank, whiteTank)):
-            board.setCaption("White hit the red!")
             board.addPointsTo(redTank)
         elif Tank.detectHit(whiteTank, redTank):
-            board.setCaption("Red hit the white!")
             board.addPointsTo(whiteTank)
-            
+
+        # board.calcDistanceBetweenTanks()
+        # print(board.distanceBetweenTanks)
         board.redraw()    
         board.slowDown()
