@@ -14,11 +14,11 @@ class Tank:
         self.angle = 0 
         self.isAmmoReady = True # not implemented yet
         self.shotLine = tuple() # line that represents trajectory of the projectile
-        self.rect = None # Rectangle that repr1.51.5esents the tank
+        self.rect = None # Rectangle that represents the tank
 
-    def move(self, distance):
+    def move(self, distance=const.tankHeight):
         """Moves the tank by distance pixels forward. 
-        Distance is cut down to lengt of the tank.
+        Distance is cut down to length of the tank.
         Use negative number to move backward."""
         distance = max(distance, const.tankHeight)
         dx = distance * cos(radians(self.angle))
@@ -33,9 +33,14 @@ class Tank:
     
     def fight(self):
         """Nethod in which the gamer puts their tactics. 
-        Here can only be used: rotate and move. In future also: fire."""
-        self.rotate(45)
-        self.move(20)          
+        Here can only be used: rotate, move, distanceToOpponent """
+        
+        if self.distanceToOpponent < 100:
+            self.move(10)
+            self.rotate(30)
+        else:
+            self.move(20)
+            self.rotate(-10)
     
     def moveTo(self, x, y):
         """Calculates new coordinates of the tank and sets the new coords, 
@@ -89,11 +94,11 @@ class Tank:
             # Najdłuższa linia może być przekątną wymiarów boarda
             diag = diagonal(const.windowWidth, const.windowHeight)
             end_point = (front_center[0] + diag * direction[0], front_center[1] + diag * direction[1])
-            pygame.draw.line(surface, self.color, front_center, end_point, 1)
+            pygame.draw.line(surface, self.color, front_center, end_point, width=1)
             self.shotLine = (front_center, end_point)
 
     @staticmethod
     def detectHit(hit, shooting):
-        """Detects that hit tank was hit by the shooting tank."""
+        """Detects that the hit tank was hit by the shooting tank."""
         if hit.rect is not None and shooting.shotLine is not None:
             return hit.rect.clipline(shooting.shotLine)
