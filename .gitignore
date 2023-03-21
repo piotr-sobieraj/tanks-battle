@@ -1,0 +1,4 @@
+replit.nix
+venv/
+__pycache__/
+*.pyc
