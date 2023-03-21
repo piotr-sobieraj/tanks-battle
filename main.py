@@ -27,10 +27,8 @@ if __name__ == "__main__":
     
         # Detection of a hit.
         if (Tank.detectHit(redTank, whiteTank)):
-            board.setCaption("White hit the red!")
             board.addPointsTo(redTank)
         elif Tank.detectHit(whiteTank, redTank):
-            board.setCaption("Red hit the white!")
             board.addPointsTo(whiteTank)
             
         board.redraw()    

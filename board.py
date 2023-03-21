@@ -41,8 +41,7 @@ class Board:
     def showGoodbyeMessage(self):
         currMess = pygame.display.get_caption()[0]
         endMess = "** GAME OVER **"
-        pygame.display.set_caption(f"{currMess} {endMess}") 
-        
+        pygame.display.set_caption(f"{currMess} {endMess}")         
 
     @staticmethod
     def slowDown(seconds=0.5):
