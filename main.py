@@ -19,11 +19,13 @@ if __name__ == "__main__":
                 pygame.quit
 
         board.updateDistanceInfo()
+        
         # Tactics of the red tank - should be put in the fight method.
         redTank.rotate(45)
         redTank.move(20)
         
-        # board.distanceBetweenTanks()
+        board.distanceBetweenTanks()
+        
         # Tactics of the white tank 
         whiteTank.fight()
         # board.distanceBetweenTanks()
@@ -34,7 +36,5 @@ if __name__ == "__main__":
         elif Tank.detectHit(whiteTank, redTank):
             board.addPointsTo(whiteTank)
 
-        # board.calcDistanceBetweenTanks()
-        # print(board.distanceBetweenTanks)
         board.redraw()    
         board.slowDown()
