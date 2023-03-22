@@ -4,4 +4,4 @@
 
 pip install pygame
 
-4. Define tank behaviour in method Tank.fight. Only allowed atm are move and rotate.
+4. Define tank behaviour in method Tank.fight. Only allowed are methods move and rotate and property distanceToOpponent.
