@@ -63,8 +63,12 @@ class Board:
         a = self.calculateAngleDiff()
         
         if a is not None:
-            self.tank1.angleToOpponent = -a
-            self.tank2.angleToOpponent = a
+            if a == 180: 
+                self.tank1.angleToOpponent = a
+                self.tank2.angleToOpponent = a
+            else:
+                self.tank1.angleToOpponent = -a
+                self.tank2.angleToOpponent = a
 
     def calculateAngleDiff(self):
         if self.tank1 is None or self.tank2 is None: return 
@@ -84,6 +88,10 @@ class Board:
     
         # Add the rotation of the second tank to the angle difference
         angleDiff += angle2
+        angleDiff %= 360        
         return angleDiff
-        print(angleDiff, angleDiff % 360)
-        
+
+    
+    def UpdateInfo(self):
+        self.updateAngleInfo()
+        self.updateDistanceInfo()        
