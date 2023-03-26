@@ -72,9 +72,10 @@ class Board:
             return None
         x1, y1 = self.tank1.x, self.tank1.y
         x2, y2 = self.tank2.x, self.tank2.y
-        # print ((y1-y2), (x1-x2))
-        return  degrees(atan ((y1-y2) / (x1-x2))) + self.tank1.angle
-        
+        angle = degrees(atan ((y1-y2) / (x1-x2))) + self.tank1.angle        
+        normalized_angle = angle % 360
+        normalized_angle -= 360 * (normalized_angle > 180)
+        return normalized_angle
         
         
     def updateInfo(self):
