@@ -60,23 +60,33 @@ class Board:
         self.tank2.distToTarget = d
 
     def updateAngleInfo(self):
-        a = self.calcAngleToTarget()
-        
-        if a is not None:
-            self.tank1.angleToTarget = a
-            self.tank2.angleToTarget = -a
+        fromRedToWhite = self.calcAngleToTarget(self.tank1, self.tank2)
+        fromWhiteToRed = self.calcAngleToTarget(self.tank2, self.tank1)
+                
+        self.tank1.angleToTarget = fromRedToWhite
+        self.tank2.angleToTarget = fromWhiteToRed
        
-    def calcAngleToTarget(self):
+    def calcAngleToTarget(self, fromTank, toTank):
         """Calculates the smallest angle (in degrees) that each tank needs to rotate in order to aim at the other tank."""
-        if not self.tank1 or not self.tank2:
+        def normalize(angle):
+            normalized_angle = angle % 360
+            normalized_angle -= 360 * (normalized_angle > 180)
+            return normalized_angle
+
+        if not fromTank or not toTank:
             return None
-        x1, y1 = self.tank1.x, self.tank1.y
-        x2, y2 = self.tank2.x, self.tank2.y
-        angle = degrees(atan ((y1-y2) / (x1-x2))) + self.tank1.angle        
-        normalized_angle = angle % 360
-        normalized_angle -= 360 * (normalized_angle > 180)
-        return normalized_angle
-        
+            
+        x1, y1 = fromTank.x, fromTank.y
+        x2, y2 = toTank.x, toTank.y
+
+        if fromTank.color == const.red:
+            angle = degrees(atan ((y1-y2) / (x1-x2))) + fromTank.angle # for redTank to white
+            return normalize(angle)
+        if fromTank.color == const.white:
+            angle = 180 - (degrees(atan ((y1-y2) / (x1-x2))) + fromTank.angle)  # for whiteTank to red
+            return normalize(angle)
+            
+    
         
     def updateInfo(self):
         self.updateAngleInfo()

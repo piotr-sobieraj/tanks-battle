@@ -13,7 +13,9 @@ if __name__ == "__main__":
     board = Board(redTank, whiteTank)        
     
     redTank.move(1)
-    redTank.rotate(1)
+    redTank.rotate(30)
+    redTank.rotate(30)
+    redTank.rotate(30)
     
     whiteTank.move(1)
     whiteTank.rotate(1)
@@ -27,6 +29,7 @@ if __name__ == "__main__":
 
         board.updateInfo()
         redTank.fightRed()
+        board.redraw()                
         
         board.updateInfo()
         whiteTank.fightWhite()
