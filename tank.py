@@ -1,4 +1,4 @@
-from math import cos, sin, radians, sqrt, degrees, atan2
+from math import cos, sin, radians, sqrt
 from numpy import sign
 import constants as const
 import pygame
@@ -37,17 +37,32 @@ class Tank:
     
     def fightRed(self):
         """Nethod in which the gamer puts their tactics. 
-        Here can only be used: rotate, move, distanceToOpponent and angleToOpponent """
-        print(f"red to white = {self.angleToTarget}")
-        self.move(10)      
-        self.rotate(-5)
-
+        Here can only be used: rotate, move, distTotarget and angleToTarget """
+        
+        if -45 < self.angleToTarget < 0:
+            self.rotate(30)
+            self.move()
+        elif 0 < self.angleToTarget < 45:
+            self.rotate(-30)
+            self.move()        
+        else:
+            self.rotate(10)
+            self.move(5)      
+        
     def fightWhite(self):
         """Nethod in which the gamer puts their tactics. 
-        Here can only be used: rotate, move, distanceToOpponent and angleToOpponent """
-        # print(f"white to red = {self.angleToTarget}")
+        Here can only be used: rotate, move, distToTarget and angleToTarget """
+        if -45 < self.angleToTarget < 0:
+            self.rotate(30)
+            self.move()
+        elif 0 < self.angleToTarget < 45:
+            self.rotate(-30)
+            self.move()        
+        else:
+            self.rotate(10)
+            self.move(5)      
+            
         
-
         
     def moveTo(self, x, y):
         """Calculates new coordinates of the tank and sets the new coords, 
