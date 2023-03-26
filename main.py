@@ -45,3 +45,4 @@ if __name__ == "__main__":
         board.UpdateInfo()                
         board.redraw()                
         board.slowDown()   
+
