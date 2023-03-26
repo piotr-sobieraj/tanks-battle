@@ -90,7 +90,6 @@ class Board:
         angleDiff += angle2
         angleDiff %= 360        
         return angleDiff
-
     
     def UpdateInfo(self):
         self.updateAngleInfo()

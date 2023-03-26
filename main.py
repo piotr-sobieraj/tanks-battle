@@ -13,6 +13,7 @@ if __name__ == "__main__":
     board = Board(redTank, whiteTank)        
 
     
+<<<<<<< HEAD
     # Main game loop
     while not board.isGameOver():
         for event in pygame.event.get():
@@ -44,3 +45,10 @@ if __name__ == "__main__":
         board.redraw()
                 
         board.slowDown()
+=======
+    
+    
+    board.updateAngleInfo()
+    print(f"{redTank.angleToOpponent=}, {whiteTank.angleToOpponent=}")
+    board.redraw()
+>>>>>>> origin/kąt-do-oponenta
