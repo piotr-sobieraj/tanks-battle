@@ -12,6 +12,7 @@ class Tank:
         self.height = const.tankHeight # height. Width should be > height (not forced)
         self.color = color 
         self.angle = 0 # angle to axe OX
+        self.angleToOpponent = None
         self.isAmmoReady = True # not implemented yet
         self.shotLine = tuple() # line that represents trajectory of the projectile
         self.rect = None # Rectangle that represents the tank
@@ -34,19 +35,28 @@ class Tank:
         angle = min(30, abs(angle))
         self.angle += s * angle
     
-    def fight(self):
+    def fightRed(self):
         """Nethod in which the gamer puts their tactics. 
-        Here can only be used: rotate, move, distanceToOpponent """
+        Here can only be used: rotate, move, distanceToOpponent and angleToOpponent """
 
-        # print(self.angleToOpponent)
-        
-        if self.distanceToOpponent < 100:
-            self.move(10)
-            self.rotate(30)
+        if -45 < self.angleToOpponent < 45:
+            self.move(10)      
+            self.rotate(1)
         else:
-            self.move(20)
-            self.rotate(-30)
+            self.move(-5)
+            self.rotate(30)
+            
 
+    def fightWhite(self):
+        """Nethod in which the gamer puts their tactics. 
+        Here can only be used: rotate, move, distanceToOpponent and angleToOpponent """
+
+        if -30 < self.angleToOpponent < 30:
+            self.move()
+        
+        self.rotate(-30)
+    
+    
     
     def moveTo(self, x, y):
         """Calculates new coordinates of the tank and sets the new coords, 
