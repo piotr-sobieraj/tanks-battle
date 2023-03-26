@@ -1,27 +1,27 @@
-from math import cos, sin, radians, sqrt
+from math import cos, sin, radians, sqrt, degrees, atan2
 from numpy import sign
 import constants as const
 import pygame
 
 
 class Tank:
-    def __init__(self, color):
-        self.x = const.windowWidth / 2 # x coordinate of tank's center 
-        self.y = const.windowHeight / 2 # y
+    def __init__(self, color, x=const.windowWidth / 2, y=const.windowHeight / 2):
+        self.x = x # x coordinate of tank's center 
+        self.y = y # y
         self.width = const.tankWidth # width of the rectangle that represents tank
-        self.height = const.tankHeight # height. Width should be > height (not forced)
+        self.length = const.tankLength # Length. Width should be > height (not forced)
         self.color = color 
         self.angle = 0 # angle to axe OX
-        self.angleToOpponent = None
+        self.angleToTarget = None
         self.isAmmoReady = True # not implemented yet
         self.shotLine = tuple() # line that represents trajectory of the projectile
         self.rect = None # Rectangle that represents the tank
 
-    def move(self, distance=const.tankHeight):
+    def move(self, distance=const.tankLength):
         """Moves the tank by distance pixels forward. 
-        Distance is cut down to length of the tank.
-        Use negative number to move backward."""
-        distance = max(distance, const.tankHeight)
+        Distance is cut down to length of the tank (10). 
+        Use negative numbers to move backwards."""
+        distance = max(distance, const.tankLength) * sign(distance)
         dx = distance * cos(radians(self.angle))
         dy = -distance * sin(radians(self.angle))
         self.moveTo(dx, dy)    
@@ -38,26 +38,17 @@ class Tank:
     def fightRed(self):
         """Nethod in which the gamer puts their tactics. 
         Here can only be used: rotate, move, distanceToOpponent and angleToOpponent """
-
-        if -45 < self.angleToOpponent < 45:
-            self.move(10)      
-            self.rotate(1)
-        else:
-            self.move(-5)
-            self.rotate(30)
-            
+        print(f"red to white = {self.angleToTarget}")
+        self.move(10)      
+        self.rotate(-5)
 
     def fightWhite(self):
         """Nethod in which the gamer puts their tactics. 
         Here can only be used: rotate, move, distanceToOpponent and angleToOpponent """
-
-        if -30 < self.angleToOpponent < 30:
-            self.move()
+        # print(f"white to red = {self.angleToTarget}")
         
-        self.rotate(-30)
-    
-    
-    
+
+        
     def moveTo(self, x, y):
         """Calculates new coordinates of the tank and sets the new coords, 
         if they fit within the board."""
@@ -70,7 +61,7 @@ class Tank:
 
     def isPointWithinBoard(self, new_x, new_y):
         """Checks whether new tank's coordinates would be within the board."""
-        return 0 <= new_x - self.width / 2 <= const.windowWidth and 0 <= new_y - self.height / 2 <= const.windowHeight
+        return 0 <= new_x - self.width / 2 <= const.windowWidth and 0 <= new_y - self.length / 2 <= const.windowHeight
     
     def getFrontCenter(self):
         """Calculates coordinates of the point lying 
@@ -82,11 +73,11 @@ class Tank:
 
     def drawTank(self, rect_surface):
         """Draws the shape of tank."""
-        pygame.draw.rect(rect_surface, self.color, (0, 0, self.width, self.height))
+        pygame.draw.rect(rect_surface, self.color, (0, 0, self.width, self.length))
     
     def draw(self, surface):
         """Draws the tank on given surface."""
-        rect_surface = pygame.Surface((self.width, self.height), pygame.SRCALPHA)
+        rect_surface = pygame.Surface((self.width, self.length), pygame.SRCALPHA)
         rect_surface.fill((0, 0, 0, 0))
         self.drawTank(rect_surface)
         rotated_surface = pygame.transform.rotate(rect_surface, self.angle)
@@ -112,6 +103,7 @@ class Tank:
             end_point = (front_center[0] + diag * direction[0], front_center[1] + diag * direction[1])
             pygame.draw.line(surface, self.color, front_center, end_point, width=1)
             self.shotLine = (front_center, end_point)
+
 
     @staticmethod
     def detectHit(hit, shooting):

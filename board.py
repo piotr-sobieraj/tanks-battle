@@ -1,5 +1,5 @@
 from time import sleep
-from math import atan2, degrees
+from math import atan, degrees
 import pygame
 import constants as const
 
@@ -7,7 +7,7 @@ import constants as const
 class Board:
     def __init__(self, *tanks): 
         self.tank1, self.tank2 = tanks # tank1 = red, tank2 = white
-        self.points = {x: 0 for x in tanks} | {"total": 0}         
+        self.points = {x: 0 for x in tanks} | {"total": 0}       
        
         pygame.init()
         self.setWindowMode()
@@ -41,7 +41,7 @@ class Board:
     def showGoodbyeMessage(self):
         currMess = pygame.display.get_caption()[0]
         endMess = "** GAME OVER **"
-        pygame.display.set_caption(f"{currMess} {endMess}")         
+        pygame.display.set_caption(f"{currMess} {endMess}")      
 
     def calcDistanceBetweenTanks(self):
         from math import dist
@@ -56,41 +56,27 @@ class Board:
 
     def updateDistanceInfo(self):
         d = self.calcDistanceBetweenTanks()
-        self.tank1.distanceToOpponent = d
-        self.tank2.distanceToOpponent = d
+        self.tank1.distToTarget = d
+        self.tank2.distToTarget = d
 
     def updateAngleInfo(self):
-        a = self.calculateAngleDiff()
+        a = self.calcAngleToTarget()
         
         if a is not None:
-            if a == 180: 
-                self.tank1.angleToOpponent = a
-                self.tank2.angleToOpponent = a
-            else:
-                self.tank1.angleToOpponent = -a
-                self.tank2.angleToOpponent = a
-
-    def calculateAngleDiff(self):
-        if self.tank1 is None or self.tank2 is None: return 
-        
-        # Get position and angle of second tank
+            self.tank1.angleToTarget = a
+            self.tank2.angleToTarget = -a
+       
+    def calcAngleToTarget(self):
+        """Calculates the smallest angle (in degrees) that each tank needs to rotate in order to aim at the other tank."""
+        if not self.tank1 or not self.tank2:
+            return None
+        x1, y1 = self.tank1.x, self.tank1.y
         x2, y2 = self.tank2.x, self.tank2.y
-        angle2 = self.tank1.angle
-    
-        # Calculate angle to second tank from current tank
-        dx, dy = x2 - self.tank2.x, y2 - self.tank2.y
-        angleTo = degrees(atan2(dy, dx))
-    
-        # Calculate difference in angle between current tank and second tank
-        angleDiff = angleTo - self.tank2.angle
-        angleDiff = angleDiff % 360
-        angleDiff = (angleDiff + 180) % 360 - 180
-    
-        # Add the rotation of the second tank to the angle difference
-        angleDiff += angle2
-        angleDiff %= 360        
-        return angleDiff
-    
-    def UpdateInfo(self):
+        # print ((y1-y2), (x1-x2))
+        return  degrees(atan ((y1-y2) / (x1-x2))) + self.tank1.angle
+        
+        
+        
+    def updateInfo(self):
         self.updateAngleInfo()
-        self.updateDistanceInfo()        
+        self.updateDistanceInfo()       
