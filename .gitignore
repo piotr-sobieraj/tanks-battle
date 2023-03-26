@@ -1,4 +1,5 @@
 replit.nix
+.replit
 venv/
 __pycache__/
 *.pyc
