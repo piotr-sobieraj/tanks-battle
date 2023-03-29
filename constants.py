@@ -13,3 +13,4 @@ tankLength = 10
 
 # The game ends once both of the players have scored together maxPointsToScore points 
 maxPointsToScore = 10
+
