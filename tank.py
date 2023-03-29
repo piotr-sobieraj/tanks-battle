@@ -38,7 +38,6 @@ class Tank:
     def fightRed(self):
         """Nethod in which the gamer puts their tactics. 
         Here can only be used: rotate, move, distTotarget and angleToTarget """
-        
         if -45 < self.angleToTarget < 0:
             self.rotate(30)
             self.move()
@@ -51,9 +50,9 @@ class Tank:
         
     def fightWhite(self):
         """Nethod in which the gamer puts their tactics. 
-        Here can only be used: rotate, move, distToTarget and angleToTarget """
-        self.rotate(30)
+        Here can only be used: rotate, move, distToTarget and angleToTarget"""
         self.move()
+        self.rotate(25)
             
         
         
@@ -69,7 +68,7 @@ class Tank:
 
     def isPointWithinBoard(self, new_x, new_y):
         """Checks whether new tank's coordinates would be within the board."""
-        return 0 <= new_x - self.width / 2 <= const.windowWidth and 0 <= new_y - self.length / 2 <= const.windowHeight
+        return 0 <= new_x - self.width + const.tankWidth <= const.windowWidth and 0 <= new_y - self.length  <= const.windowHeight - const.tankWidth
     
     def getFrontCenter(self):
         """Calculates coordinates of the point lying 
