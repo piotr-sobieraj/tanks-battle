@@ -1,24 +1,27 @@
 import pygame
 import constants as const
-from tank import Tank
+from tank import Red, White, Tank
 from board import Board
 
 if __name__ == "__main__":
     
     # Create tanks
-    redTank = Tank(const.red, 100, 100)
-    whiteTank = Tank(const.white, 350, 350)
+    Red = Red(const.red, 350, 350)
+    White = White(const.white, 100, 100)
             
     # Board with two tanks on it
-    board = Board(redTank, whiteTank)        
+    board = Board(Red, White)        
     
-    redTank.move(1)
-    redTank.rotate(30)
-    redTank.rotate(30)
-    redTank.rotate(30)
+    Red.move(1)
+    Red.rotate(30)
+    Red.rotate(30)
+    Red.rotate(30)
     
-    whiteTank.move(1)
-    whiteTank.rotate(1)
+    White.move(1)
+    White.rotate(30)
+    White.rotate(30)
+    White.rotate(30)
+    White.rotate(30)
     
     
     # Main game loop
@@ -28,17 +31,19 @@ if __name__ == "__main__":
                 pygame.quit
 
         board.updateInfo()
-        redTank.fightRed()
-        board.redraw()                
-        
+        Red.fight()
+        board.redraw() 
+
         board.updateInfo()
-        whiteTank.fightWhite()
+        White.fight()
+        board.redraw() 
+        
     
         # Detection of a hit.
-        if (Tank.detectHit(redTank, whiteTank)):
-            board.addPointsTo(redTank)
-        elif Tank.detectHit(whiteTank, redTank):
-            board.addPointsTo(whiteTank)
+        if (Tank.detectHit(Red, White)):
+            board.addPointsTo(Red)
+        elif Tank.detectHit(White, Red):
+            board.addPointsTo(White)
 
 
         board.redraw()                

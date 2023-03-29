@@ -34,27 +34,6 @@ class Tank:
         s = sign(angle)
         angle = min(30, abs(angle))
         self.angle += s * angle
-    
-    def fightRed(self):
-        """Nethod in which the gamer puts their tactics. 
-        Here can only be used: rotate, move, distTotarget and angleToTarget """
-        if -45 < self.angleToTarget < 0:
-            self.rotate(30)
-            self.move()
-        elif 0 < self.angleToTarget < 45:
-            self.rotate(-30)
-            self.move()        
-        else:
-            self.rotate(10)
-            self.move(5)      
-        
-    def fightWhite(self):
-        """Nethod in which the gamer puts their tactics. 
-        Here can only be used: rotate, move, distToTarget and angleToTarget"""
-        self.move()
-        self.rotate(25)
-            
-        
         
     def moveTo(self, x, y):
         """Calculates new coordinates of the tank and sets the new coords, 
@@ -117,3 +96,40 @@ class Tank:
         """Detects that the hit tank was hit by the shooting tank."""
         if hit.rect is not None and shooting.shotLine is not None:
             return hit.rect.clipline(shooting.shotLine)
+
+
+
+class Red(Tank):
+    def __init__(self, color, xstart, ystart):
+        super().__init__(color, xstart, ystart)
+
+    def fight(self):
+        """Nethod in which the gamer puts their tactics. 
+        Here can only be used: rotate, move, distToTarget and angleToTarget"""
+        if -45 < self.angleToTarget < 0:
+            self.rotate(30)
+            self.move()
+        elif 0 < self.angleToTarget < 45:
+            self.rotate(-30)
+            self.move()        
+        else:
+            self.rotate(30)
+            self.move(10) 
+
+
+class White(Tank):
+    def __init__(self, color, xstart, ystart):
+        super().__init__(color, xstart, ystart)
+
+    def fight(self):
+        """Nethod in which the gamer puts their tactics. 
+        Here can only be used: rotate, move, distToTarget and angleToTarget"""
+        if -45 < self.angleToTarget < 0:
+            self.rotate(30)
+            self.move()
+        elif 0 < self.angleToTarget < 45:
+            self.rotate(-30)
+            self.move()        
+        else:
+            self.rotate(30)
+            self.move(10) 
