@@ -52,15 +52,8 @@ class Tank:
     def fightWhite(self):
         """Nethod in which the gamer puts their tactics. 
         Here can only be used: rotate, move, distToTarget and angleToTarget """
-        if -45 < self.angleToTarget < 0:
-            self.rotate(30)
-            self.move()
-        elif 0 < self.angleToTarget < 45:
-            self.rotate(-30)
-            self.move()        
-        else:
-            self.rotate(10)
-            self.move(5)      
+        self.rotate(30)
+        self.move()
             
         
         
